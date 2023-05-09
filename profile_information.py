@@ -8,12 +8,15 @@ followers and list of accounts that are being followed by a user of
 Instagram social network.
 """
 import instaloader
+from instaloader import instaloader
+from instaloader.structures import Profile
 from instaloader.exceptions import (BadCredentialsException,
                                     InvalidArgumentException,
                                     TwoFactorAuthRequiredException)
 
 
-def login(instagram, username, password):
+def login(instagram: instaloader.Instaloader, 
+          username: str, password: str) -> Profile:
     """ Realiza o login de um usuário no Instagram.
         Logs a user into Instagram.
 
@@ -26,10 +29,9 @@ def login(instagram, username, password):
                         Instagram account password.
 
     Returns:
-        instaloader.Profile : Se houver exito na realização do login,
-                              caso contrário retorna None.
-                              If the login is successful, otherwise it
-                              returns None.
+        Profile : Se houver exito na realização do login, caso contrário
+                  retorna None.
+                  If the login is successful, otherwise it returns None.
     """
     try:
         instagram.login(username, password)
@@ -58,50 +60,36 @@ def login(instagram, username, password):
         return profile
 
 
-def process_information(profile):
+def process_information(profile: Profile, 
+                        get_not_followers_back:bool=False) -> None:
     """Processa informações relacionadas ao usuário.
        Processes user-related information.
 
     Args:
-        profile (instaloader.Profile): Instância Profile que armazena
+        profile (Profile): Instância Profile que armazena
         informações do perfil do usuário.
                                        Profile instance that stores user
         profile information.
+        get_not_followers_back (bool): Flag para obter seguidores que
+        não seguem de volta.
     """
     followers_list = [(f.username, f.full_name)
                       for f in profile.get_followers()]
     following_list = [(f.username, f.full_name)
                       for f in profile.get_followees()]
-
-    print_information(profile,
-                      followers_list=followers_list,
-                      following_list=following_list)
-
-
-def get_not_followers_back(profile):
-    """Obtém lista de usuários que não seguem a conta em questão.
-       Gets list of users who do not follow the account in question.
-
-    Args:
-        profile (instaloader.Profile): Instância Profile que armazena
-        informações do perfil do usuário.
-                                       Profile instance that stores user
-        profile information.
-    """
-    followers_list = [(f.username, f.full_name)
-                      for f in profile.get_followers()]
-    following_list = [(f.username, f.full_name)
-                      for f in profile.get_followees()]
-
-    no_followers_back = list(
+    no_followers_back = []
+    if get_not_followers_back:
+        no_followers_back = list(
         set(following_list).difference(set(followers_list))
     )
-
-    print_information(profile, no_followers_back=no_followers_back)
-
+    print_information(profile,
+                      followers_list=followers_list,
+                      following_list=following_list,
+                      no_followers_back=no_followers_back)
+    
 
 def print_information(profile, followers_list=[],
-                      following_list=[], no_followers_back=[]):
+                      following_list=[], no_followers_back=[]) -> None:
     """Exibe as informções solicitadas do usuário.
        Displays the requested information from the user.
 

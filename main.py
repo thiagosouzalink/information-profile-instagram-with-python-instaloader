@@ -11,8 +11,7 @@ import instaloader
 
 
 from profile_information import (login,
-                                 process_information,
-                                 get_not_followers_back)
+                                 process_information)
 
 
 if __name__ == "__main__":
@@ -21,12 +20,11 @@ if __name__ == "__main__":
     username = input("Informe seu username: ").strip()
     password = getpass("Informe sua senha: ")
 
-    perfil = login(instagram, username, password)
+    profile = login(instagram, username, password)
 
-    if not perfil:
+    if not profile:
         print("\nVerifique as informações da conta e tente novamente.\n")
 
     else:
         print(f"\nProcessando informações do usuário {username}...")
-        process_information(perfil)
-        get_not_followers_back(perfil)
+        process_information(profile, get_not_followers_back=True)
