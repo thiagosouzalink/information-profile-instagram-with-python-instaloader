@@ -5,7 +5,8 @@ from get_session_user import instagram
 
 
 # Username 
-USER = "username"
+# USER = "username"
+USER = instagram.context.username
 
 print("Getting profile...")
 profile = Profile.from_username(instagram.context, USER)
