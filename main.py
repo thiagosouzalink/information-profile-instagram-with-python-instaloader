@@ -1,30 +1,13 @@
-"""
-Projeto que exibe informações de perfil, lista de seguidores e lista de
-contas que está seguindo de um usuário da rede social Instagram.
+from instaloader.structures import Profile
 
-Project that displays profile information, list of followers and list of
-accounts that are following of a social network user Instagram.
-"""
-from getpass import getpass
-
-import instaloader
+from profile_information import process_information
+from get_session_user import instagram
 
 
-from profile_information import (login,
-                                 process_information)
+# Username 
+USER = "username"
 
-
-if __name__ == "__main__":
-    instagram = instaloader.Instaloader()
-
-    username = input("Informe seu username: ").strip()
-    password = getpass("Informe sua senha: ")
-
-    profile = login(instagram, username, password)
-
-    if not profile:
-        print("\nVerifique as informações da conta e tente novamente.\n")
-
-    else:
-        print(f"\nProcessando informações do usuário {username}...")
-        process_information(profile, get_not_followers_back=True)
+print("Getting profile...")
+profile = Profile.from_username(instagram.context, USER)
+print("Getting profile information...")
+process_information(profile=profile, get_not_followers_back=True)

@@ -73,10 +73,13 @@ def process_information(profile: Profile,
         get_not_followers_back (bool): Flag para obter seguidores que
         não seguem de volta.
     """
+    print("Getting list of followers...")
     followers_list = [(f.username, f.full_name)
                       for f in profile.get_followers()]
+    print("Getting list of following...")
     following_list = [(f.username, f.full_name)
                       for f in profile.get_followees()]
+    print("Checking for profiles that don't follow back...")
     no_followers_back = []
     if get_not_followers_back:
         no_followers_back = list(
@@ -88,8 +91,10 @@ def process_information(profile: Profile,
                       no_followers_back=no_followers_back)
     
 
-def print_information(profile, followers_list=[],
-                      following_list=[], no_followers_back=[]) -> None:
+def print_information(profile: instaloader.Profile, 
+                      followers_list: list,
+                      following_list: list, 
+                      no_followers_back: list) -> None:
     """Exibe as informções solicitadas do usuário.
        Displays the requested information from the user.
 
@@ -111,42 +116,44 @@ def print_information(profile, followers_list=[],
                                             List of users who do not
             follow the account in question back. Defaults to [].
     """
-    print("\n########## INFORMAÇÕES DO USUÁRIO ##########\n")
+    print("\n########## USER INFORMATION ##########\n")
     print(f"Username: {profile.username}")
-    print(f"Nome: {profile.full_name}")
-    print(f'Seguidores: {profile.followers}')
-    print(f'Seguindo: {profile.followees}')
+    print(f"Name: {profile.full_name}")
+    print(f'Followers: {profile.followers}')
+    print(f'Following: {profile.followees}')
+    if no_followers_back:
+        print(f"Don't follow back: {len(no_followers_back)}")
     print("\n############################################")
 
-    if followers_list and following_list:
+    if followers_list:
         highest_username_followers = max(followers_list,
                                          key=lambda f: len(f[0]))
-        highest_username_following = max(following_list,
-                                         key=lambda f: len(f[0]))
-        print("\n\n########### Lista de Seguidores ###########\n")
+        print("\n\n########### Follower List ###########\n")
         for f in followers_list:
             print(
                 f"Username: {f[0].ljust(len(highest_username_followers[0])+5)}"
-                f"Nome: {f[1]}"
+                f"Name: {f[1]}"
             )
         print("############################################")
 
-        print("\n\n########### Lista de Seguindo ###########\n")
+    if following_list:
+        highest_username_following = max(following_list,
+                                         key=lambda f: len(f[0]))
+        print("\n\n########### Following List ###########\n")
         for f in following_list:
             print(
                 f"Username: {f[0].ljust(len(highest_username_followers[0])+5)}"
-                f"Nome: {f[1]}"
+                f"Name: {f[1]}"
             )
         print("\n############################################")
 
     if no_followers_back:
         highest_username_following = max(no_followers_back,
                                          key=lambda f: len(f[0]))
-        print("\n\n########## Lista que não seguem você de volta ##########\n")
+        print("\n\n########## List that do not follow the profile back ##########\n")
         for f in no_followers_back:
             print(
                 f"Username: {f[0].ljust(len(highest_username_following[0])+5)}"
-                f"Nome: {f[1]}"
+                f"Name: {f[1]}"
             )
-        print(f"\nTotal: {len(no_followers_back)}")
         print("\n############################################\n")
